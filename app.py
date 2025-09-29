@@ -1,8 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
 from collections import defaultdict
+import redis
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+
+# Connect to Upstash Redis
+upstash_redis_url = os.environ.get("UPSTASH_REDIS_URL")
+if not upstash_redis_url:
+    raise ValueError("UPSTASH_REDIS_URL environment variable not set")
+r = redis.from_url(upstash_redis_url, decode_responses=True)
 
 def calculate_average_rankings(all_rankings):
     if not all_rankings:
@@ -24,10 +35,10 @@ def calculate_average_rankings(all_rankings):
 
 @app.route('/')
 def index():
-    try:
-        with open('rankings.json', 'r') as f:
-            all_rankings_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    all_rankings_json = r.get('rankings')
+    if all_rankings_json:
+        all_rankings_data = json.loads(all_rankings_json)
+    else:
         all_rankings_data = []
 
     average_ranks = calculate_average_rankings(all_rankings_data)
@@ -45,11 +56,11 @@ def submit():
         key, value = item.split(':')
         ranking[key.strip()] = int(value.strip())
 
-    # Read existing data
-    try:
-        with open('rankings.json', 'r') as f:
-            all_rankings = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    # Read existing data from Redis
+    all_rankings_json = r.get('rankings')
+    if all_rankings_json:
+        all_rankings = json.loads(all_rankings_json)
+    else:
         all_rankings = []
 
     # Append new data
@@ -58,9 +69,8 @@ def submit():
         'ranking': ranking
     })
 
-    # Write all data back
-    with open('rankings.json', 'w') as f:
-        json.dump(all_rankings, f, indent=4)
+    # Write all data back to Redis
+    r.set('rankings', json.dumps(all_rankings))
 
     return redirect(url_for('index'))
 
