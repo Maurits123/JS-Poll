@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Poll</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-football-ball"></i> JS Poll</h1>
+            <p>Submit your top 25 rankings and see the compiled results</p>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="current-poll">
+                <i class="fas fa-trophy"></i> Current Poll
+            </button>
+            <button class="tab-btn" data-tab="submit-poll">
+                <i class="fas fa-vote-yea"></i> Submit Rankings
+            </button>
+            <button class="tab-btn" data-tab="poll-history">
+                <i class="fas fa-history"></i> Poll History
+            </button>
+            <button class="tab-btn" data-tab="excel-upload">
+                <i class="fas fa-file-excel"></i> Excel Upload
+            </button>
+        </nav>
+
+        <!-- Current Poll Tab -->
+        <div id="current-poll" class="tab-content active">
+            <div class="poll-header">
+                <h2>Week <span id="current-week">1</span> AP Poll Results</h2>
+                <p class="poll-date">Last Updated: <span id="last-updated">Loading...</span></p>
+            </div>
+            <div class="poll-results" id="poll-results">
+                <!-- Poll results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Submit Poll Tab -->
+        <div id="submit-poll" class="tab-content">
+            <div class="submission-form">
+                <h2>Submit Your Top 25 Rankings</h2>
+                <form id="poll-form">
+                    <div class="form-group">
+                        <label for="voter-name">Your Name (Optional)</label>
+                        <input type="text" id="voter-name" placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="rankings-container">
+                        <div class="rankings-grid" id="rankings-grid">
+                            <!-- Rankings will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="clear-form" class="btn btn-secondary">
+                            <i class="fas fa-eraser"></i> Clear All
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Rankings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Poll History Tab -->
+        <div id="poll-history" class="tab-content">
+            <h2>Poll History</h2>
+            <div class="history-filters">
+                <select id="week-selector">
+                    <option value="">Select Week</option>
+                </select>
+                <button id="export-data" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+            </div>
+            <div class="history-results" id="history-results">
+                <!-- History will be populated here -->
+            </div>
+        </div>
+
+        <!-- Excel Upload Tab -->
+        <div id="excel-upload" class="tab-content">
+            <h2>Upload Excel File</h2>
+            <div class="upload-container">
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag and drop your Excel file here or click to browse</p>
+                    <input type="file" id="excel-file" accept=".xlsx,.xls" style="display: none;">
+                </div>
+                <div class="upload-instructions">
+                    <h3>Excel File Format Requirements:</h3>
+                    <ul>
+                        <li>First column: Team names (must match official FBS team names)</li>
+                        <li>Second column: Ranking (1-25)</li>
+                        <li>Include header row</li>
+                        <li>Maximum 25 teams per submission</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Selection Modal -->
+    <div id="team-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Team for Position <span id="modal-position"></span></h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="team-search" placeholder="Search for a team...">
+                </div>
+                <div class="team-list" id="team-list">
+                    <!-- Teams will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="message-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
