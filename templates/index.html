@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rankings</title>
+</head>
+<body>
+    <h1>Overall Rankings</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Average Rank</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item, rank in rankings %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>{{ rank }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h1>Submit Your Ranking</h1>
+    <form action="/submit" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="ranking">Ranking (e.g., item1:1,item2:2):</label>
+        <input type="text" id="ranking" name="ranking" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
